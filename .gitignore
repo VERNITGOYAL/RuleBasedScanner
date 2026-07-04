@@ -1,4 +1,4 @@
-# Virtual environment
+# Virtual Environment
 .venv/
 
 # Python
@@ -9,10 +9,18 @@ __pycache__/
 # VS Code
 .vscode/
 
-# Output files
-output/
+# Logs
+logs/*.log
+
+# SQLite
 *.db
 
-# OS files
+# Output
+output/
+
+# Environment
+.env
+
+# OS
 .DS_Store
 Thumbs.db
