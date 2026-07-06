@@ -11,8 +11,13 @@ class HTMLParser:
 
     def get_title(self) -> str:
         """Return page title."""
-        if self.soup.title:
-            return self.soup.title.text.strip()
+        if self.soup.title and self.soup.title.string:
+         return self.soup.title.string.strip()
+
+        h1 = self.soup.find("h1")
+        if h1:
+         return h1.get_text(strip=True)
+
         return "No Title"
 
     def extract_links(self) -> list[str]:
