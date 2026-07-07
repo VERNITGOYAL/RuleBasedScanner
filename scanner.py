@@ -6,7 +6,6 @@ from rich.console import Console
 from rich.panel import Panel
 
 from crawler.crawler import Crawler
-from crawler.html_parser import HTMLParser
 
 console = Console()
 
@@ -25,28 +24,22 @@ def main():
 
     crawler = Crawler()
 
-    html = crawler.fetch_page(url)
+    page = crawler.fetch_page(url)
 
-    if not html:
+    if page is None:
         console.print("[red]✗ Failed to download page.[/red]")
         return
 
     console.print("[green]✓ Page downloaded successfully![/green]")
 
-    parser = HTMLParser(html, url)
+    console.print(f"\n[cyan]Page Title:[/cyan] {page.title}")
 
-    title = parser.get_title()
+    console.print(f"[cyan]Links Found:[/cyan] {len(page.links)}")
 
-    links = parser.extract_links()
-
-    console.print(f"\n[cyan]Page Title:[/cyan] {title}")
-
-    console.print(f"[cyan]Links Found:[/cyan] {len(links)}")
-
-    if links:
+    if page.links:
         console.print("\n[bold]Discovered Links:[/bold]")
 
-        for link in links:
+        for link in page.links:
             console.print(f" • {link}")
 
 
