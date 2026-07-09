@@ -5,13 +5,12 @@ Rule-Based Web Vulnerability Scanner
 from rich.console import Console
 from rich.panel import Panel
 
-from crawler.crawler import Crawler
+from crawler.site_crawler import SiteCrawler
 
 console = Console()
 
 
 def main():
-
     console.print(
         Panel.fit(
             "[bold cyan]Rule-Based Web Vulnerability Scanner[/bold cyan]\n"
@@ -22,25 +21,21 @@ def main():
 
     url = input("Enter target URL: ").strip()
 
-    crawler = Crawler()
+    site_crawler = SiteCrawler()
 
-    page = crawler.fetch_page(url)
+    count = 0
 
-    if page is None:
-        console.print("[red]✗ Failed to download page.[/red]")
-        return
+    for page in site_crawler.crawl(url):
 
-    console.print("[green]✓ Page downloaded successfully![/green]")
+        count += 1
 
-    console.print(f"\n[cyan]Page Title:[/cyan] {page.title}")
+        console.print(f"\n[bold green]Page {count}[/bold green]")
+        console.print(f"[cyan]Title:[/cyan] {page.title}")
+        console.print(f"[cyan]URL:[/cyan] {page.url}")
+        console.print(f"[cyan]Status Code:[/cyan] {page.status_code}")
+        console.print(f"[cyan]Response Time:[/cyan] {page.response_time:.2f} sec")
+        console.print(f"[cyan]Links Found:[/cyan] {len(page.links)}")
 
-    console.print(f"[cyan]Links Found:[/cyan] {len(page.links)}")
-
-    if page.links:
-        console.print("\n[bold]Discovered Links:[/bold]")
-
-        for link in page.links:
-            console.print(f" • {link}")
 
 
 if __name__ == "__main__":

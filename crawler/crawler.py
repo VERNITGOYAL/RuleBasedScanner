@@ -39,10 +39,14 @@ class Crawler:
             parser = HTMLParser(html, url)
 
             page = Page(
-                url=url,
-                html=html,
-                title=parser.get_title(),
-                links=parser.extract_links()
+            url=url,
+            html=html,
+            title=parser.get_title(),
+            links=parser.extract_links(),
+            status_code=response.status_code,
+            headers=dict(response.headers),
+            cookies=response.cookies.get_dict(),
+            response_time=response.elapsed.total_seconds()
             )
 
             return page
