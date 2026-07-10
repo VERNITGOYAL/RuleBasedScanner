@@ -45,9 +45,9 @@ class Crawler:
             links=parser.extract_links(),
             status_code=response.status_code,
             headers=dict(response.headers),
-            cookies=response.cookies.get_dict(),
+            cookies=response.cookies,
             response_time=response.elapsed.total_seconds()
-            )
+        )
 
             return page
 
