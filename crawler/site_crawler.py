@@ -48,6 +48,8 @@ class SiteCrawler:
 
             yield page
 
+            print(f"Found {len(page.links)} links")
+
             for link in page.links:
 
                 if not link:
@@ -57,16 +59,24 @@ class SiteCrawler:
 
                 parsed = urlparse(absolute_url)
 
-                # Ignore non-http links
+                # Ignore non-http/https links
                 if parsed.scheme not in ("http", "https"):
                     continue
 
-                # Stay inside the same website
+                # Stay inside same domain
                 if parsed.netloc != start_domain:
                     continue
 
-                # Remove fragments (#section)
+                # Remove URL fragment
                 clean_url = absolute_url.split("#")[0]
+
+                # Remove trailing slash (except root)
+                if (
+                    clean_url.endswith("/")
+                    and len(clean_url)
+                    > len(parsed.scheme + "://" + parsed.netloc + "/")
+                ):
+                    clean_url = clean_url.rstrip("/")
 
                 if clean_url not in visited and clean_url not in queue:
                     queue.append(clean_url)
