@@ -1,7 +1,7 @@
 """
 crawler.py
 
-Handles downloading web pages.
+Downloads webpages and creates Page objects.
 """
 
 import requests
@@ -15,18 +15,18 @@ from crawler.page import Page
 
 
 class Crawler:
-    """Downloads and parses web pages."""
+    """Downloads and parses webpages."""
 
     def __init__(self):
+
         self.session = requests.Session()
+
         self.session.headers.update(DEFAULT_HEADERS)
 
     def fetch_page(self, url: str):
-        """
-        Download a webpage and return a Page object.
-        """
 
         try:
+
             response = self.session.get(
                 url,
                 timeout=REQUEST_TIMEOUT
@@ -39,18 +39,21 @@ class Crawler:
             parser = HTMLParser(html, url)
 
             page = Page(
-            url=url,
-            html=html,
-            title=parser.get_title(),
-            links=parser.extract_links(),
-            status_code=response.status_code,
-            headers=dict(response.headers),
-            cookies=response.cookies,
-            response_time=response.elapsed.total_seconds()
-        )
+                url=url,
+                html=html,
+                title=parser.get_title(),
+                links=parser.extract_links(),
+                forms=parser.extract_forms(),
+                status_code=response.status_code,
+                headers=dict(response.headers),
+                cookies=response.cookies,
+                response_time=response.elapsed.total_seconds()
+            )
 
             return page
 
         except RequestException as error:
+
             print(f"Error: {error}")
+
             return None
