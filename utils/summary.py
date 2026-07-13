@@ -18,6 +18,7 @@ class Summary:
         missing_headers,
         cookie_issues,
         forms_found,
+        csrf_findings,
         sqli_findings,
         xss_findings,
         overall_score,
@@ -31,6 +32,7 @@ class Summary:
         console.print(f"Missing Headers    : {missing_headers}")
         console.print(f"Cookie Issues      : {cookie_issues}")
         console.print(f"Forms Found        : {forms_found}")
+        console.print(f"CSRF Findings      : {csrf_findings}")
         console.print(f"SQLi Findings      : {sqli_findings}")
         console.print(f"XSS Findings       : {xss_findings}")
         console.print(f"Overall Score      : {overall_score}")

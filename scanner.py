@@ -10,6 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from analyzer.cookies import CookieAnalyzer
+from analyzer.csrf import CSRFAnalyzer
 from analyzer.forms import FormAnalyzer
 from analyzer.headers import HeaderAnalyzer
 from analyzer.https_analyzer import HTTPSAnalyzer
@@ -46,6 +47,7 @@ def main():
     cookie_analyzer = CookieAnalyzer()
     https_analyzer = HTTPSAnalyzer()
     form_analyzer = FormAnalyzer()
+    csrf_analyzer = CSRFAnalyzer()
     sqli_analyzer = SQLInjectionAnalyzer()
     xss_analyzer = XSSAnalyzer()
     risk_calculator = RiskCalculator()
@@ -61,6 +63,7 @@ def main():
     missing_headers = 0
     cookie_issues = 0
     forms_found = 0
+    csrf_findings = 0
     sqli_findings = 0
     xss_findings = 0
     overall_score = 0
@@ -202,6 +205,26 @@ def main():
                     console.print(f"Issues: {', '.join(result['issues'])}")
 
         # ==========================
+        # CSRF Analysis
+        # ==========================
+
+        console.print("\n[bold yellow]CSRF Analysis[/bold yellow]")
+
+        csrf_results = csrf_analyzer.analyze(page.forms)
+        page_csrf_findings = sum(1 for result in csrf_results if result["issues"])
+        csrf_findings += page_csrf_findings
+
+        if page_csrf_findings == 0:
+            console.print("[green]No CSRF issues found.[/green]")
+        else:
+            for result in csrf_results:
+                if result["issues"]:
+                    console.print(
+                        f"Action: {result['action']} | Risk: {result['risk']}"
+                    )
+                    console.print(f"Issues: {', '.join(result['issues'])}")
+
+        # ==========================
         # XSS Analysis
         # ==========================
 
@@ -230,6 +253,7 @@ def main():
             header_results,
             cookie_results,
             form_results,
+            csrf_results,
             sqli_results,
             xss_results,
         )
@@ -261,6 +285,7 @@ def main():
         missing_headers=missing_headers,
         cookie_issues=cookie_issues,
         forms_found=forms_found,
+        csrf_findings=csrf_findings,
         sqli_findings=sqli_findings,
         xss_findings=xss_findings,
         overall_score=overall_score,
@@ -283,6 +308,7 @@ def main():
         "Missing Headers": missing_headers,
         "Cookie Issues": cookie_issues,
         "Forms Found": forms_found,
+        "CSRF Findings": csrf_findings,
         "SQLi Findings": sqli_findings,
         "XSS Findings": xss_findings,
         "Overall Score": overall_score,

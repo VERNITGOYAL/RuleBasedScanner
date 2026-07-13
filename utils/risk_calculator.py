@@ -13,6 +13,7 @@ class RiskCalculator:
         header_results,
         cookie_results,
         form_results,
+        csrf_results,
         sqli_results,
         xss_results
     ):
@@ -46,6 +47,14 @@ class RiskCalculator:
             if form["risk"] == "MEDIUM":
                 score += 2
             elif form["risk"] == "HIGH":
+                score += 3
+
+        # CSRF
+        for result in csrf_results:
+
+            if result["risk"] == "MEDIUM":
+                score += 2
+            elif result["risk"] == "HIGH":
                 score += 3
 
         # SQL Injection
